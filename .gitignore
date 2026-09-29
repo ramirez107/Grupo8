@@ -1,0 +1,4 @@
+# Archivos basura del sistema (Mac y Windows)
+.DS_Store
+desktop.ini
+Thumbs.db
