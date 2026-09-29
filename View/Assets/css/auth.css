@@ -1,0 +1,366 @@
+/* Estilos de login, registro y recuperar contraseña.
+   Los colores y tamaños basados en el Figma. */
+
+:root {
+  --verde-oscuro: #0e1b12;
+  --verde: #2b4833;
+  --verde-medio: #3f6a4a;
+  --verde-claro: #4d7d58;
+  --gris-campo: #efefef;
+  --gris-borde: #bdbdbd;
+  --texto: #1d1d1d;
+  --texto-suave: #6b6b6b;
+  --rojo: #b3261e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #fff;
+  color: var(--texto);
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+/* Encabezado verde */
+.encabezado {
+  position: relative;
+  padding: 88px 24px 104px;
+  text-align: center;
+  background: linear-gradient(90deg, #35573e 0%, #1f3a27 55%, var(--verde-oscuro) 100%);
+  border-radius: 0 0 26px 26px;
+}
+
+.encabezado h1 {
+  margin: 0;
+  font-family: 'Delius', cursive;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 7vw, 4.4rem);
+}
+
+.encabezado h1 a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-volver {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  color: #fff;
+  font-size: 1.75rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.btn-volver:hover { opacity: .8; }
+
+/* Contenido */
+.contenido {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 56px 24px 72px;
+}
+
+/* Pestañas Registro / Inicio de sesión */
+.pestanas {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  padding-bottom: 8px;
+  margin: 0 auto 96px;
+}
+
+.pestanas::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #2f2f2f 18%, #2f2f2f 82%, transparent);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+}
+
+.pestana {
+  padding: 5px 18px;
+  border-radius: 999px;
+  color: var(--texto);
+  font-size: .95rem;
+  text-decoration: none;
+}
+
+.pestana.activa {
+  background: var(--verde);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Título y texto de recuperar contraseña */
+.titulo-seccion {
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
+  font-weight: 800;
+}
+
+.descripcion {
+  max-width: 420px;
+  margin: 0 auto 72px;
+  text-align: center;
+  font-size: .95rem;
+  line-height: 1.5;
+}
+
+/* Campos redondeados con ícono */
+.campo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  background: var(--gris-campo);
+  border: 1.5px solid var(--gris-borde);
+  border-radius: 999px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, .12);
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.campo i {
+  font-size: 1.2rem;
+  color: var(--texto);
+}
+
+.campo input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--texto);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.campo input::placeholder { color: #444; }
+
+.campo:focus-within {
+  border-color: var(--verde-medio);
+  box-shadow: 0 0 0 3px rgba(63, 106, 74, .2);
+}
+
+/* Ojito para ver la contraseña */
+.ver-contrasena {
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: var(--texto-suave);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ver-contrasena:hover { color: var(--texto); }
+
+/* Campos con error */
+.campo.invalido {
+  border-color: var(--rojo);
+  box-shadow: 0 0 0 3px rgba(179, 38, 30, .12);
+}
+
+.codigo.invalido input:invalid { border-color: var(--rojo); }
+
+.mensaje-error {
+  display: none;
+  margin: -12px 0 16px 20px;
+  color: var(--rojo);
+  font-size: .8rem;
+}
+
+.mensaje-error.centrado {
+  margin: -28px 0 24px;
+  text-align: center;
+}
+
+.campo.invalido + .mensaje-error,
+.codigo.invalido + .mensaje-error { display: block; }
+
+.olvido {
+  display: block;
+  margin-top: -6px;
+  text-align: right;
+  color: var(--texto-suave);
+  font-size: .75rem;
+  text-decoration: none;
+}
+
+.olvido:hover { text-decoration: underline; }
+
+/* Cajitas del código de verificación */
+.codigo {
+  display: flex;
+  justify-content: center;
+  gap: clamp(10px, 3vw, 22px);
+  margin: 0 0 40px;
+}
+
+.codigo input {
+  width: clamp(48px, 13vw, 84px);
+  aspect-ratio: 1;
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  background: #dcdcdc;
+  color: var(--texto);
+  font: 700 clamp(1.4rem, 4vw, 2rem) 'Inter', Arial, sans-serif;
+  text-align: center;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.codigo input:focus {
+  border-color: var(--verde-medio);
+  box-shadow: 0 0 0 3px rgba(63, 106, 74, .2);
+}
+
+.btn-texto {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  text-decoration: none;
+  padding: 4px 8px;
+  border: 0;
+  background: none;
+  color: var(--texto);
+  font: 600 .9rem 'Inter', Arial, sans-serif;
+  cursor: pointer;
+}
+
+.btn-texto:hover { text-decoration: underline; }
+
+.enlace-secundario {
+  display: block;
+  margin-top: 28px;
+  text-align: center;
+  color: var(--texto-suave);
+  font-size: .85rem;
+}
+
+/* Botón principal verde */
+.btn-principal {
+  display: block;
+  margin: 80px auto 0;
+  padding: 14px 34px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--verde-claro) 0%, #26432f 100%);
+  color: #fff;
+  font: 600 1rem 'Inter', Arial, sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
+  cursor: pointer;
+  transition: filter .15s, transform .15s;
+}
+
+.btn-principal.ancho {
+  width: min(100%, 360px);
+  margin-top: 48px;
+}
+
+.btn-principal:hover { filter: brightness(1.1); }
+.btn-principal:active { transform: translateY(1px); }
+
+/* Botones de Google, Apple y Facebook */
+.social h2 {
+  margin: 72px 0 16px;
+  font-size: .95rem;
+  font-weight: 400;
+}
+
+.social-botones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.btn-social {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 18px;
+  background: var(--gris-campo);
+  border: 1.5px solid var(--gris-borde);
+  border-radius: 999px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, .12);
+  color: var(--texto);
+  font: 500 .8rem 'Inter', Arial, sans-serif;
+  cursor: pointer;
+}
+
+.btn-social i { font-size: 1.15rem; }
+.btn-social:hover { background: #e5e5e5; }
+
+.aviso {
+  margin: 14px 0 0;
+  color: var(--texto-suave);
+  font-size: .85rem;
+  text-align: center;
+}
+
+/* Tarjeta verde con el check */
+.modal-exito {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(205, 210, 206, .78);
+  animation: aparecer .25s ease;
+}
+
+.modal-exito[hidden] { display: none; }
+
+.modal-exito .tarjeta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  width: min(92vw, 420px);
+  aspect-ratio: 5 / 6;
+  padding: 32px;
+  border-radius: 30px;
+  background: var(--verde);
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
+}
+
+.modal-exito .tarjeta svg { width: 120px; height: 90px; }
+
+.modal-exito .tarjeta p {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Celular */
+@media (max-width: 560px) {
+  .encabezado { padding: 44px 20px 46px; }
+  .pestanas { margin-bottom: 44px; gap: 14px; }
+  .descripcion { margin-bottom: 40px; }
+  .btn-principal { margin-top: 40px; }
+  .social h2 { margin-top: 40px; }
+  .social-botones { grid-template-columns: 1fr; }
+}
