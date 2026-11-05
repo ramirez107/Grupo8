@@ -1,4 +1,4 @@
-<?php include_once 'layoutInterno.php'; ?>
+<?php include_once __DIR__ . '/../layoutInterno.php'; ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -12,7 +12,7 @@
     <!-- Banner principal -->
     <section class="py-3">
       <div class="container-fluid">
-        <div class="banner-ad bg-info" style="background-image: url('Assets/images/background-pattern.jpg'); background-size: cover;">
+        <div class="banner-ad bg-info">
           <div class="swiper main-swiper">
             <div class="swiper-wrapper">
 
@@ -25,7 +25,7 @@
                     <a href="#" class="btn btn-verde btn-lg mt-3">Comprar ahora</a>
                   </div>
                   <div class="img-wrapper col-md-5 text-center">
-                    <img src="Assets/images/product-thumb-1.png" class="img-fluid" alt="Botella de jugo natural">
+                    <img src="../Assets/images/product-thumb-1.png" class="img-fluid" alt="Botella de jugo natural">
                   </div>
                 </div>
               </div>
@@ -39,7 +39,7 @@
                     <a href="#" class="btn btn-verde btn-lg mt-3">Ver ofertas</a>
                   </div>
                   <div class="img-wrapper col-md-5 text-center">
-                    <img src="Assets/images/product-thumb-1.png" class="img-fluid" alt="Botella de jugo natural">
+                    <img src="../Assets/images/product-thumb-1.png" class="img-fluid" alt="Botella de jugo natural">
                   </div>
                 </div>
               </div>
@@ -63,7 +63,7 @@
               </div>
               <div class="col-md-5 p-4 text-md-end">
                 <a href="registro.php" class="btn btn-verde btn-lg me-2 mb-2">Crear cuenta</a>
-                <a href="login.php" class="btn btn-contorno btn-lg mb-2">Ya tengo cuenta</a>
+<a href="login.php" class="btn btn-contorno btn-lg mb-2">Ya tengo cuenta</a>
               </div>
             </div>
           </div>

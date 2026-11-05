@@ -1,3 +1,4 @@
+
 <?php
 // Partes que se repiten en las paginas de la tienda (encabezado, pie de pagina, CSS y JS)
 
@@ -19,15 +20,16 @@ function IncludeCSS($titulo)
           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
           <link href="https://fonts.googleapis.com/css2?family=Delius&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-          <link rel="stylesheet" href="Assets/css/style.css">
+          <link rel="stylesheet" href="../Assets/css/style.css">
         </head>
     ';
 }
 
+
 function MostrarHeader()
 {
     echo '
-        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" class="iconos-ocultos">
           <defs>
             <symbol xmlns="http://www.w3.org/2000/svg" id="cart" viewBox="0 0 24 24">
               <path fill="currentColor" d="M8.5 19a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 8.5 19ZM19 16H7a1 1 0 0 1 0-2h8.491a3.013 3.013 0 0 0 2.885-2.176l1.585-5.55A1 1 0 0 0 19 5H6.74a3.007 3.007 0 0 0-2.82-2H3a1 1 0 0 0 0 2h.921a1.005 1.005 0 0 1 .962.725l.155.545v.005l1.641 5.742A3 3 0 0 0 7 18h12a1 1 0 0 0 0-2Zm-1.326-9l-1.22 4.274a1.005 1.005 0 0 1-.963.726H8.754l-.255-.892L7.326 7ZM16.5 19a1.5 1.5 0 1 0 1.5 1.5a1.5 1.5 0 0 0-1.5-1.5Z"/>
@@ -63,10 +65,10 @@ function MostrarHeader()
         <!-- Encabezado -->
         <header class="encabezado-principal">
           <div class="container-fluid">
-            <h1 class="marca"><a href="index.php">Los Jaulares</a></h1>
+            <h1 class="marca"><a href="../../index.php">Los Jaulares</a></h1>
 
             <div class="encabezado-barra">
-              <form class="buscador" action="index.php" method="get" role="search">
+              <form class="buscador" action="home.php" method="get" role="search">
                 <input type="search" name="buscar" placeholder="Barra de búsqueda" aria-label="Buscar productos">
                 <button type="submit" aria-label="Buscar">
                   <svg width="22" height="22" viewBox="0 0 24 24"><use xlink:href="#search"></use></svg>
@@ -90,12 +92,13 @@ function MostrarHeader()
         </header>
 
         <nav class="filtros" aria-label="Filtros de productos">
-          <a href="#" class="filtro activo" aria-current="page">General</a>
+          <a href="home.php" class="filtro activo" aria-current="page">General</a>
           <a href="#" class="filtro">2X1</a>
           <a href="#" class="filtro">Descuentos</a>
         </nav>
     ';
 }
+
 
 function MostrarFooter()
 {
@@ -166,6 +169,6 @@ function IncludeJS()
     echo '
         <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-        <script src="Assets/js/script.js"></script>
+        <script src="../Assets/js/script.js"></script>
     ';
 }

@@ -278,6 +278,9 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   overflow: hidden;
   border-radius: 20px;
+  background-image: url('../images/background-pattern.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 .banner-ad .swiper-slide {
@@ -397,4 +400,8 @@ h1, h2, h3, h4, h5, h6 {
   .banner-content { padding: 2rem !important; }
   .filtros { gap: 10px; }
   .filtro { padding: 4px 14px; font-size: .95rem; }
+}
+
+.iconos-ocultos {
+    display: none;
 }
