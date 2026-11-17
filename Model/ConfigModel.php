@@ -1,17 +1,18 @@
+
 <?php
 
 // abre la conexion de la pagina del cliente con la base supermercado_jaulares
 function Conectar()
 {
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    return new mysqli("127.0.0.1:3306","client_jaulares","Client_Jaulares2026!","supermercado_jaulares");
+    return new mysqli("127.0.0.1:3307","client_jaulares","Client_Jaulares2026!","supermercado_jaulares");
 }
 
 // abre la conexion del panel admin con la base supermercado_jaulares
 function ConectarAdmin()
 {
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    return new mysqli("127.0.0.1:3306","admin_jaulares","Admin_Jaulares2026!","supermercado_jaulares");
+    return new mysqli("127.0.0.1:3307","admin_jaulares","Admin_Jaulares2026!","supermercado_jaulares");
 }
 
 // cierra la conexion

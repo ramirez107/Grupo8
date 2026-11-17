@@ -446,3 +446,335 @@ h1, h2, h3, h4, h5, h6 {
   background: #f7f7f7;
   border-radius: 8px;
 }
+
+
+/* Movimiento suave de las tarjetas */
+.tarjeta-producto {
+    transition: transform 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+.tarjeta-producto:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Zoom suave en las imagenes */
+.tarjeta-producto .card-img-top {
+    transition: transform 0.35s ease;
+}
+
+.tarjeta-producto:hover .card-img-top {
+    transform: scale(1.06);
+}
+
+/* Animacion de iconos del encabezado */
+.accion-encabezado i,
+.accion-encabezado svg {
+    transition: transform 0.25s ease;
+}
+
+.accion-encabezado:hover i,
+.accion-encabezado:hover svg {
+    transform: translateY(-3px) scale(1.1);
+}
+
+/* Movimiento suave en botones */
+.btn-verde {
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                filter 0.25s ease;
+}
+
+.btn-verde:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Accesibilidad: reducir animaciones */
+@media (prefers-reduced-motion: reduce) {
+    .tarjeta-producto,
+    .tarjeta-producto .card-img-top,
+    .accion-encabezado i,
+    .accion-encabezado svg,
+    .btn-verde {
+        transition: none;
+    }
+
+    .tarjeta-producto:hover,
+    .tarjeta-producto:hover .card-img-top,
+    .accion-encabezado:hover i,
+    .accion-encabezado:hover svg,
+    .btn-verde:hover {
+        transform: none;
+    }
+}
+
+
+/* mejora la apariencia de las categorias */
+.lista-categorias .list-group-item {
+    transition: background-color 0.25s ease,
+                color 0.25s ease,
+                padding-left 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+/* agrega movimiento al seleccionar una categoria */
+.lista-categorias .list-group-item:hover {
+    padding-left: 24px;
+    background-color: #e8f5e9;
+    color: #1b5e20;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* mantiene visible la categoria seleccionada */
+.lista-categorias .list-group-item.active:hover {
+    color: #ffffff;
+}
+
+/* respeta la configuracion de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    .lista-categorias .list-group-item {
+        transition: none;
+    }
+}
+
+
+/* mejora la presentacion de las imagenes de productos */
+.tarjeta-producto .card-img-top {
+    width: 100%;
+    height: 190px;
+    object-fit: contain;
+    object-position: center;
+    padding: 12px;
+    background-color: #ffffff;
+}
+
+/* evita que las imagenes sobresalgan de las tarjetas */
+.tarjeta-producto {
+    overflow: hidden;
+}
+
+/* ajusta las imagenes para pantallas pequenas */
+@media (max-width: 576px) {
+    .tarjeta-producto .card-img-top {
+        height: 150px;
+        padding: 8px;
+    }
+}
+
+
+/* mejora la interaccion de los filtros */
+.form-control,
+.form-select {
+    transition: border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                transform 0.25s ease;
+}
+
+/* resalta el campo seleccionado */
+.form-control:focus,
+.form-select:focus {
+    border-color: #2e6243;
+    box-shadow: 0 0 0 4px rgba(46, 98, 67, 0.12);
+}
+
+/* agrega movimiento a los campos */
+.form-control:hover,
+.form-select:hover {
+    border-color: #6c9b7a;
+}
+
+/* mejora la interaccion de los botones */
+.btn {
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                filter 0.25s ease;
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+/* agrega efecto al presionar un boton */
+.btn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+/* respeta la configuracion de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    .form-control,
+    .form-select,
+    .btn {
+        transition: none;
+    }
+
+    .btn:hover:not(:disabled),
+    .btn:active:not(:disabled) {
+        transform: none;
+    }
+}
+
+
+/* mejora la apariencia de los banners */
+.swiper-slide img {
+    transition: transform 0.5s ease,
+                filter 0.5s ease;
+}
+
+.swiper-slide:hover img {
+    transform: scale(1.025);
+    filter: brightness(1.04);
+}
+
+/* mejora los controles del carrusel */
+.swiper-button-next,
+.swiper-button-prev {
+    transition: transform 0.25s ease,
+                opacity 0.25s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    transform: scale(1.15);
+}
+
+/* agrega movimiento a los enlaces */
+.nav-link {
+    transition: color 0.25s ease,
+                transform 0.25s ease;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+}
+
+/* mejora los indicadores del carrusel */
+.swiper-pagination-bullet {
+    transition: transform 0.25s ease,
+                opacity 0.25s ease;
+}
+
+.swiper-pagination-bullet:hover {
+    transform: scale(1.3);
+}
+
+/* respeta la configuracion de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    .swiper-slide img,
+    .swiper-button-next,
+    .swiper-button-prev,
+    .nav-link,
+    .swiper-pagination-bullet {
+        transition: none;
+    }
+
+    .swiper-slide:hover img,
+    .swiper-button-next:hover,
+    .swiper-button-prev:hover,
+    .nav-link:hover,
+    .swiper-pagination-bullet:hover {
+        transform: none;
+    }
+}
+
+
+/* mejora los campos de los formularios */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+    transition: border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease;
+}
+
+/* resalta los campos al seleccionarlos */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus {
+    border-color: #2e6243;
+    box-shadow: 0 0 0 4px rgba(46, 98, 67, 0.12);
+    outline: none;
+}
+
+/* agrega movimiento a los botones de formularios */
+form button[type="submit"] {
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                filter 0.25s ease;
+}
+
+form button[type="submit"]:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* agrega efecto al presionar los botones */
+form button[type="submit"]:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+/* respeta la configuracion de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    form button[type="submit"] {
+        transition: none;
+    }
+
+    form button[type="submit"]:hover:not(:disabled),
+    form button[type="submit"]:active:not(:disabled) {
+        transform: none;
+    }
+}
+
+
+/* mejora la interaccion de las tablas */
+.table tbody tr {
+    transition: background-color 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+/* resalta las filas al pasar el cursor */
+.table tbody tr:hover {
+    background-color: #e8f5e9;
+    box-shadow: inset 4px 0 0 #2e6243;
+}
+
+/* mejora los botones de las tablas */
+.table .btn {
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+.table .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* mejora la apariencia de las tarjetas */
+.card {
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* respeta la configuracion de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    .table tbody tr,
+    .table .btn,
+    .card {
+        transition: none;
+    }
+
+    .table .btn:hover:not(:disabled) {
+        transform: none;
+    }
+}
