@@ -1,4 +1,12 @@
-<?php include_once __DIR__ . '/../layoutInterno.php'; ?>
+<?php
+include_once __DIR__ . '/../layoutInterno.php';
+include_once __DIR__ . '/../../Controller/InicioController.php';
+
+// todo lo que se muestra sale de la base con procedimientos almacenados
+$promociones = ConsultarPromociones();
+$categorias = ConsultarCategorias();
+$destacados = ConsultarDestacados();
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -9,40 +17,47 @@
 
     <?php MostrarHeader(); ?>
 
-    <!-- Banner principal -->
+    <!-- Banner principal: promociones vigentes (sp_promocion_vigentes) -->
     <section class="py-3">
       <div class="container-fluid">
         <div class="banner-ad bg-info">
           <div class="swiper main-swiper">
             <div class="swiper-wrapper">
 
+              <?php if (count($promociones) == 0) { ?>
               <div class="swiper-slide">
                 <div class="row banner-content p-5 align-items-center">
                   <div class="content-wrapper col-md-7">
-                    <div class="categories my-3">100% natural</div>
+                    <div class="categories my-3">Los Jaulares</div>
                     <h2 class="display-4">Frescura para tu hogar todos los días</h2>
-                    <p>Frutas, verduras, carnes y abarrotes a precios justos, siempre cerca de vos.</p>
-                    <a href="#" class="btn btn-verde btn-lg mt-3">Comprar ahora</a>
+                    <a href="../Catalogo/catalogo.php" class="btn btn-verde btn-lg mt-3">Iniciar compra</a>
                   </div>
                   <div class="img-wrapper col-md-5 text-center">
-                    <img src="../Assets/images/product-thumb-1.png" class="img-fluid" alt="Botella de jugo natural">
+                    <img src="../Assets/images/product-thumb-1.png" class="img-fluid" alt="Productos del supermercado">
                   </div>
                 </div>
               </div>
+              <?php } ?>
 
+              <?php foreach ($promociones as $promocion) {
+                  $es2x1 = $promocion['tipo'] == '2x1';
+              ?>
               <div class="swiper-slide">
                 <div class="row banner-content p-5 align-items-center">
                   <div class="content-wrapper col-md-7">
-                    <div class="categories my-3">Ofertas de la semana</div>
-                    <h2 class="display-4">2x1 en productos seleccionados</h2>
-                    <p>Aprovechá los descuentos en limpieza, lácteos y bebidas mientras duren las existencias.</p>
-                    <a href="#" class="btn btn-verde btn-lg mt-3">Ver ofertas</a>
+                    <div class="categories my-3">
+                      <?php echo $es2x1 ? 'Promoción 2x1' : Texto(rtrim(rtrim($promocion['descuento'], '0'), '.')) . '% de descuento'; ?>
+                    </div>
+                    <h2 class="display-4"><?php echo Texto($promocion['nombre']); ?></h2>
+                    <p>Válido hasta el <?php echo date('d/m/Y', strtotime($promocion['fecha_fin'])); ?>.</p>
+                    <a href="../Catalogo/catalogo.php?oferta=<?php echo $es2x1 ? '2x1' : 'descuento'; ?>" class="btn btn-verde btn-lg mt-3">Iniciar compra</a>
                   </div>
                   <div class="img-wrapper col-md-5 text-center">
-                    <img src="../Assets/images/product-thumb-1.png" class="img-fluid" alt="Botella de jugo natural">
+                    <img src="../Assets/images/product-thumb-1.png" class="img-fluid" alt="Productos en promoción">
                   </div>
                 </div>
               </div>
+              <?php } ?>
 
             </div>
             <div class="swiper-pagination"></div>
@@ -51,7 +66,8 @@
       </div>
     </section>
 
-    <!-- Promoción de registro -->
+    <?php if (!isset($_SESSION['idUsuario'])) { ?>
+    <!-- Promoción de registro, solo sin sesión -->
     <section class="py-5 promo">
       <div class="container-fluid">
         <div class="bg-secondary py-5 rounded-5">
@@ -63,32 +79,40 @@
               </div>
               <div class="col-md-5 p-4 text-md-end">
                 <a href="registro.php" class="btn btn-verde btn-lg me-2 mb-2">Crear cuenta</a>
-<a href="login.php" class="btn btn-contorno btn-lg mb-2">Ya tengo cuenta</a>
+                <a href="login.php" class="btn btn-contorno btn-lg mb-2">Ya tengo cuenta</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
+    <?php } ?>
 
-    <!-- Lo más buscado -->
+    <!-- Categorías (sp_categoria_listar_activas) -->
     <section class="py-5">
       <div class="container-fluid">
-        <h2 class="mb-4">Lo más buscado</h2>
-        <a href="#" class="chip">Arroz</a>
-        <a href="#" class="chip">Frijoles</a>
-        <a href="#" class="chip">Café</a>
-        <a href="#" class="chip">Leche</a>
-        <a href="#" class="chip">Huevos</a>
-        <a href="#" class="chip">Pollo</a>
-        <a href="#" class="chip">Cereal</a>
-        <a href="#" class="chip">Yogurt</a>
-        <a href="#" class="chip">Detergente</a>
-        <a href="#" class="chip">Suavizante</a>
-        <a href="#" class="chip">Cloro</a>
-        <a href="#" class="chip">Shampoo</a>
-        <a href="#" class="chip">Papel higiénico</a>
-        <a href="#" class="chip">Pasta dental</a>
+        <h2 class="mb-4">Categorías</h2>
+        <?php foreach ($categorias as $categoria) { ?>
+          <a href="../Catalogo/catalogo.php?categoria=<?php echo (int) $categoria['id_categoria']; ?>" class="chip"><?php echo Texto($categoria['nombre']); ?></a>
+        <?php } ?>
+      </div>
+    </section>
+
+    <!-- Lo más buscado (sp_producto_destacados) -->
+    <section class="py-5">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Lo más buscado</h2>
+          <a href="../Catalogo/catalogo.php" class="btn btn-contorno">Ver catálogo</a>
+        </div>
+
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+          <?php foreach ($destacados as $producto) { ?>
+            <div class="col">
+              <?php MostrarTarjetaProducto($producto); ?>
+            </div>
+          <?php } ?>
+        </div>
       </div>
     </section>
 

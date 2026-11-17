@@ -189,6 +189,14 @@ body {
 .campo.invalido + .mensaje-error,
 .codigo.invalido + .mensaje-error { display: block; }
 
+/* mensaje que pone jquery validate debajo del campo */
+.error-campo {
+  display: block;
+  margin: -12px 0 16px 20px;
+  color: var(--rojo);
+  font-size: .8rem;
+}
+
 .olvido {
   display: block;
   margin-top: -6px;

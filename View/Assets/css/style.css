@@ -405,3 +405,44 @@ h1, h2, h3, h4, h5, h6 {
 .iconos-ocultos {
     display: none;
 }
+
+/* tarjetas de productos del catalogo */
+.tarjeta-producto {
+  position: relative;
+  border: 1px solid #e3e3e3;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.tarjeta-producto .card-img-top {
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  padding: 16px;
+  background: #f7f7f7;
+}
+
+.tarjeta-producto del { font-size: .9rem; }
+
+.etiqueta-oferta {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--verde);
+}
+
+/* catalogo: menu de categorias y buscador */
+.lista-categorias .list-group-item.active {
+  background: var(--verde);
+  border-color: var(--verde);
+}
+
+.icono-panel { font-size: 1.6rem; }
+
+/* panel admin */
+.imagen-tabla {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  background: #f7f7f7;
+  border-radius: 8px;
+}

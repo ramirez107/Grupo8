@@ -1,16 +1,19 @@
-
 <?php
 include_once __DIR__ . '/../layoutExterno.php';
+include_once __DIR__ . '/../../Controller/InicioController.php';
 
-// Determinar la pantalla que se debe mostrar
+// determina la pantalla que se debe mostrar
 $paso = $_GET['paso'] ?? 'solicitar';
 
 if (!in_array($paso, ['solicitar', 'nueva'], true)) {
     $paso = 'solicitar';
 }
 
-// Obtener el token enviado en el enlace de recuperación
-$token = $_GET['token'] ?? '';
+// token que viene en el enlace de recuperacion
+$token = $_GET['token'] ?? ($_POST['token'] ?? '');
+
+// si el enlace ya no sirve no se muestra el formulario de contrasenna nueva
+$tokenValido = $paso === 'nueva' && !isset($_POST["exito"]) ? TokenValido($token) : true;
 ?>
 
 <!DOCTYPE html>
@@ -33,8 +36,9 @@ $token = $_GET['token'] ?? '';
                 restablecer su contraseña.
             </p>
 
-            <!-- El envío real del enlace se integrará posteriormente -->
-            <form action="recuperar.php" method="POST"
+            <?php MostrarMensaje(); ?>
+
+            <form action="" method="POST"
                   id="formRecuperar" novalidate>
 
                 <label class="campo">
@@ -43,18 +47,16 @@ $token = $_GET['token'] ?? '';
                     <input
                         type="email"
                         id="txtEmail"
-                        name="email"
+                        name="txtEmail"
                         placeholder="Correo electrónico"
                         autocomplete="email"
+                        value="<?php echo isset($_POST['txtEmail']) ? htmlspecialchars($_POST['txtEmail'], ENT_QUOTES, 'UTF-8') : ''; ?>"
                         required
                     >
                 </label>
 
-                <small class="mensaje-error">
-                    Ingrese un correo electrónico válido.
-                </small>
 
-                <button type="submit" class="btn-principal ancho">
+                <button type="submit" name="btnRecuperarContrasenna" class="btn-principal ancho">
                     Enviar enlace de recuperación
                 </button>
 
@@ -62,6 +64,18 @@ $token = $_GET['token'] ?? '';
 
             <a href="login.php" class="enlace-secundario">
                 Volver al inicio de sesión
+            </a>
+
+        <?php elseif (!$tokenValido): ?>
+
+            <h2 class="titulo-seccion">Enlace no válido</h2>
+
+            <div class="alert alert-warning" role="alert">
+                El enlace venció o ya fue usado. Solicite uno nuevo.
+            </div>
+
+            <a href="recuperar.php" class="enlace-secundario">
+                Solicitar otro enlace
             </a>
 
         <?php else: ?>
@@ -73,11 +87,10 @@ $token = $_GET['token'] ?? '';
                 el acceso a su cuenta.
             </p>
 
-            <!-- La validación real del token se integrará con la BD -->
-            <form action="login.php" method="POST"
-                  id="formNueva" novalidate
-                  data-exito="Su contraseña se actualizó exitosamente"
-                  data-destino="login.php">
+            <?php MostrarMensaje(); ?>
+
+            <form action="recuperar.php?paso=nueva" method="POST"
+                  id="formNueva" novalidate>
 
                 <input type="hidden" name="token"
                        value="<?= htmlspecialchars($token, ENT_QUOTES, 'UTF-8') ?>">
@@ -88,11 +101,9 @@ $token = $_GET['token'] ?? '';
                     <input
                         type="password"
                         id="txtContrasenna"
-                        name="contrasenna"
+                        name="txtContrasenna"
                         placeholder="Contraseña nueva"
                         autocomplete="new-password"
-                        minlength="8"
-                        pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}"
                         required
                     >
 
@@ -102,10 +113,6 @@ $token = $_GET['token'] ?? '';
                     </button>
                 </label>
 
-                <small class="mensaje-error">
-                    La contraseña debe tener al menos 8 caracteres,
-                    incluyendo letras y números.
-                </small>
 
                 <label class="campo">
                     <i class="bi bi-lock-fill"></i>
@@ -113,11 +120,9 @@ $token = $_GET['token'] ?? '';
                     <input
                         type="password"
                         id="txtConfirmar"
-                        name="confirmarContrasenna"
+                        name="txtConfirmarContrasenna"
                         placeholder="Confirmar contraseña"
                         autocomplete="new-password"
-                        minlength="8"
-                        data-igual-a="txtContrasenna"
                         required
                     >
 
@@ -127,11 +132,8 @@ $token = $_GET['token'] ?? '';
                     </button>
                 </label>
 
-                <small class="mensaje-error">
-                    Las contraseñas no coinciden.
-                </small>
 
-                <button type="submit" class="btn-principal ancho">
+                <button type="submit" name="btnGuardarContrasenna" class="btn-principal ancho">
                     Guardar contraseña
                 </button>
 
@@ -143,7 +145,7 @@ $token = $_GET['token'] ?? '';
 
     <?php MostrarTarjetaExito(); ?>
 
-    <?php IncludeJS(); ?>
+    <?php IncludeJS('recuperar.js'); ?>
 
 </body>
 </html>

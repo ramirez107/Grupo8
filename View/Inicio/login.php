@@ -1,5 +1,7 @@
-
-<?php include_once __DIR__ . '/../layoutExterno.php'; ?>
+<?php
+include_once __DIR__ . '/../layoutExterno.php';
+include_once __DIR__ . '/../../Controller/InicioController.php';
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -17,22 +19,22 @@
             <a href="login.php" class="pestana activa" aria-current="page">Inicio de sesión</a>
         </nav>
 
-        <!-- Por ahora se validan los campos; posteriormente se conectará con la base de datos -->
-        <form action="home.php" method="POST" id="formLogin" novalidate
-              data-exito="Su inicio de sesión se realizó exitosamente"
-              data-destino="home.php">
+        <?php MostrarMensaje(); ?>
+
+        <!-- se envia a la misma pagina y lo procesa InicioController -->
+        <form action="" method="POST" id="formLogin" novalidate>
 
             <label class="campo">
                 <i class="bi bi-envelope"></i>
-                <input type="email" id="txtEmail" name="email"
+                <input type="email" id="txtEmail" name="txtEmail"
                        placeholder="Correo electrónico"
-                       autocomplete="username" required>
+                       autocomplete="username"
+                       value="<?php echo isset($_POST['txtEmail']) ? htmlspecialchars($_POST['txtEmail'], ENT_QUOTES, 'UTF-8') : ''; ?>" required>
             </label>
-            <small class="mensaje-error">Ingrese un correo electrónico válido.</small>
 
             <label class="campo">
                 <i class="bi bi-lock"></i>
-                <input type="password" id="txtContrasenna" name="contrasenna"
+                <input type="password" id="txtContrasenna" name="txtContrasenna"
                        placeholder="Contraseña"
                        autocomplete="current-password" required>
                 <button type="button" class="ver-contrasena"
@@ -40,11 +42,10 @@
                     <i class="bi bi-eye"></i>
                 </button>
             </label>
-            <small class="mensaje-error">Ingrese su contraseña.</small>
 
             <a href="recuperar.php" class="olvido">Contraseña olvidada</a>
 
-            <button type="submit" class="btn-principal">Iniciar sesión</button>
+            <button type="submit" name="btnInicioSesion" class="btn-principal">Iniciar sesión</button>
 
         </form>
 
@@ -52,7 +53,7 @@
 
     <?php MostrarTarjetaExito(); ?>
 
-    <?php IncludeJS(); ?>
+    <?php IncludeJS('login.js'); ?>
 
 </body>
 </html>
