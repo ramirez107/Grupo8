@@ -2,21 +2,25 @@
    Usé la plantilla FoodMart y le cambie los colores y las letras como en el figma */
 
 /* Colores y letras */
-:root {
-  --verde-oscuro: #0e1b12;
-  --verde: #2b4833;
-  --verde-medio: #3f6a4a;
-  --verde-claro: #4d7d58;
-  --verde-suave: #eef5ef;
-  --gris-campo: #efefef;
-  --gris-borde: #bdbdbd;
-  --texto: #1d1d1d;
-  --texto-suave: #5f5f5f;
-  --amarillo-oferta: #f2b33d;
 
-  --fuente-marca: 'Delius', cursive;
-  --fuente-texto: 'Inter', Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap');
+/* colores y tipografia */
+:root {
+    --verde-oscuro: #1E402B;
+    --verde: #1E402B;
+    --verde-medio: #44C174;
+    --verde-claro: #44C174;
+    --verde-suave: #eef5ef;
+    --gris-campo: #efefef;
+    --gris-borde: #bdbdbd;
+    --texto: #1d1d1d;
+    --texto-suave: #5f5f5f;
+    --amarillo-oferta: #F9C040;
+
+    --fuente-marca: 'Roboto', Arial, sans-serif;
+    --fuente-texto: 'Roboto', Arial, sans-serif;
 }
+
 
 body {
   --bs-body-font-family: var(--fuente-texto);
@@ -29,7 +33,7 @@ body {
   --bs-link-color-rgb: 29, 29, 29;
   --bs-link-hover-color-rgb: 43, 72, 51;
 
-  --bs-primary: #2b4833;
+  --bs-primary: #1E402B;
   --bs-primary-rgb: 43, 72, 51;
   --bs-secondary-rgb: 238, 245, 239;
   --bs-info-rgb: 244, 248, 244;
@@ -150,7 +154,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Encabezado verde (como en el Figma) */
 .encabezado-principal {
   padding: 40px 0 28px;
-  background: linear-gradient(90deg, #35573e 0%, #1f3a27 55%, var(--verde-oscuro) 100%);
+  background: linear-gradient(90deg, #1E402B 0%, #1E402B 55%, var(--verde-oscuro) 100%);
   border-radius: 0 0 26px 26px;
 }
 
@@ -345,7 +349,7 @@ h1, h2, h3, h4, h5, h6 {
 .pie {
   margin-top: 40px;
   padding: 56px 0 24px;
-  background: linear-gradient(90deg, #35573e 0%, #1f3a27 55%, var(--verde-oscuro) 100%);
+  background: linear-gradient(90deg, #1E402B 0%, #1E402B 55%, var(--verde-oscuro) 100%);
   border-radius: 26px 26px 0 0;
   color: #d7e3d9;
 }
@@ -575,7 +579,7 @@ h1, h2, h3, h4, h5, h6 {
 /* resalta el campo seleccionado */
 .form-control:focus,
 .form-select:focus {
-    border-color: #2e6243;
+    border-color: #1E402B;
     box-shadow: 0 0 0 4px rgba(46, 98, 67, 0.12);
 }
 
@@ -695,7 +699,7 @@ input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="tel"]:focus {
-    border-color: #2e6243;
+    border-color: #1E402B;
     box-shadow: 0 0 0 4px rgba(46, 98, 67, 0.12);
     outline: none;
 }
@@ -743,7 +747,7 @@ form button[type="submit"]:active:not(:disabled) {
 /* resalta las filas al pasar el cursor */
 .table tbody tr:hover {
     background-color: #e8f5e9;
-    box-shadow: inset 4px 0 0 #2e6243;
+    box-shadow: inset 4px 0 0 #1E402B;
 }
 
 /* mejora los botones de las tablas */

@@ -2,12 +2,54 @@
 
 $(function () {
 
-    // confirmar antes de desactivar un producto o una categoria
+    
+    // confirmar cambios de estado con un modal
     $('form.confirmar').on('submit', function (e) {
-        if (!confirm($(this).data('pregunta'))) {
-            e.preventDefault();
-        }
+        e.preventDefault();
+
+        const formulario = this;
+        const pregunta = $(formulario).data('pregunta');
+
+        const modalElemento = document.createElement('div');
+        modalElemento.className = 'modal fade';
+        modalElemento.tabIndex = -1;
+
+        modalElemento.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmar acción</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0" id="mensajeConfirmacion"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="aceptarConfirmacion">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modalElemento);
+        modalElemento.querySelector('#mensajeConfirmacion').textContent = pregunta;
+
+        const modal = new bootstrap.Modal(modalElemento);
+
+        modalElemento.querySelector('#aceptarConfirmacion').addEventListener('click', function () {
+            modal.hide();
+            HTMLFormElement.prototype.submit.call(formulario);
+        });
+
+        modalElemento.addEventListener('hidden.bs.modal', function () {
+            modal.dispose();
+            modalElemento.remove();
+        });
+
+        modal.show();
     });
+
 
     const reglasComunes = {
         // se valida al escribir y al enviar, asi el boton no se mueve al dar clic

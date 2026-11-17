@@ -66,28 +66,6 @@ $destacados = ConsultarDestacados();
       </div>
     </section>
 
-    <?php if (!isset($_SESSION['idUsuario'])) { ?>
-    <!-- Promoción de registro, solo sin sesión -->
-    <section class="py-5 promo">
-      <div class="container-fluid">
-        <div class="bg-secondary py-5 rounded-5">
-          <div class="container py-4">
-            <div class="row align-items-center">
-              <div class="col-md-7 p-4">
-                <h2 class="section-title display-5">Obtené un <span>25% de descuento</span> en tu primera compra</h2>
-                <p class="mb-0">Creá tu cuenta en Los Jaulares y recibí ofertas exclusivas, promociones 2x1 y descuentos todas las semanas.</p>
-              </div>
-              <div class="col-md-5 p-4 text-md-end">
-                <a href="registro.php" class="btn btn-verde btn-lg me-2 mb-2">Crear cuenta</a>
-                <a href="login.php" class="btn btn-contorno btn-lg mb-2">Ya tengo cuenta</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <?php } ?>
-
     <!-- Categorías (sp_categoria_listar_activas) -->
     <section class="py-5">
       <div class="container-fluid">
