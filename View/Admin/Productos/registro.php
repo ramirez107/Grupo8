@@ -1,5 +1,9 @@
 <?php
 include_once __DIR__ . '/../../layoutInterno.php';
+
+// el panel solo lo usa el administrador
+ValidarRol('Administrador');
+
 include_once __DIR__ . '/../../../Controller/InicioController.php';
 include_once __DIR__ . '/../../../Controller/ProductoController.php';
 
@@ -39,7 +43,7 @@ $producto = [];
 
     <?php IncludeJS(); ?>
 
-    <script src="../../Assets/js/admin.js"></script>
+    <script src="<?php echo Asset('js/admin.js'); ?>"></script>
 
   </body>
 </html>

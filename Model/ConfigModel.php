@@ -1,4 +1,3 @@
-
 <?php
 
 // abre la conexion de la pagina del cliente con la base supermercado_jaulares

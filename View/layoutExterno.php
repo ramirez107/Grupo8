@@ -12,10 +12,10 @@ function IncludeCSS($titulo)
 
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Delius&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Delius&family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-            <link rel="stylesheet" href="../Assets/css/auth.css">
+            <link rel="stylesheet" href="' . Asset('css/auth.css') . '">
         </head>
     ';
 }
@@ -27,7 +27,7 @@ function MostrarEncabezado($volver = 'home.php')
             <a href="' . htmlspecialchars($volver, ENT_QUOTES, 'UTF-8') . '" class="btn-volver" aria-label="Volver">
                 <i class="bi bi-arrow-left-circle"></i>
             </a>
-            <h1><a href="home.php">Los Jaulares</a></h1>
+            <h1 class="marca"><a href="home.php">Los Jaulares</a></h1>
         </header>
     ';
 }
@@ -72,10 +72,11 @@ function IncludeJS($archivoJs = '')
     echo '
         <script src="https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.21.0/dist/jquery.validate.min.js"></script>
-        <script src="../Assets/js/auth.js"></script>
+        <script src="' . Asset('js/auth.js') . '"></script>
+        <script src="' . Asset('js/marca.js') . '"></script>
     ';
 
     if ($archivoJs != '') {
-        echo '<script src="../Assets/js/' . Texto($archivoJs) . '"></script>';
+        echo '<script src="' . Texto(Asset('js/' . $archivoJs)) . '"></script>';
     }
 }

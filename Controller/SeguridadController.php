@@ -5,6 +5,8 @@ include_once __DIR__ . '/ConfigController.php';
 function ValidarSesion()
 {
     if (!isset($_SESSION['idUsuario'])) {
+        // el login muestra este aviso al llegar
+        $_SESSION['aviso'] = 'Debe iniciar sesión para acceder a esta sección';
         header("Location: " . RutaView() . "Inicio/login.php");
         exit();
     }

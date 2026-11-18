@@ -1,6 +1,15 @@
 <?php
 include_once __DIR__ . '/../layoutExterno.php';
 include_once __DIR__ . '/../../Controller/InicioController.php';
+
+// aviso cuando se intento entrar a una pagina que pide sesion (ValidarSesion)
+if (isset($_SESSION['aviso'])) {
+    if (!isset($_POST['mensaje'])) {
+        $_POST['mensaje'] = Texto($_SESSION['aviso']);
+        $_POST['tipoMensaje'] = 'warning';
+    }
+    unset($_SESSION['aviso']);
+}
 ?>
 
 <!DOCTYPE html>

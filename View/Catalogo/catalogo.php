@@ -1,5 +1,9 @@
 <?php
 include_once __DIR__ . '/../layoutInterno.php';
+
+// el catalogo solo se ve con sesion iniciada
+ValidarSesion();
+
 include_once __DIR__ . '/../../Controller/InicioController.php';
 include_once __DIR__ . '/../../Controller/CatalogoController.php';
 
@@ -38,6 +42,16 @@ $oferta = $_GET['oferta'] ?? '';
         </aside>
 
         <section class="col-lg-9">
+
+          <?php if (EsAdministrador() && ($oferta == '2x1' || $oferta == 'descuento')) { ?>
+            <!-- el admin puede ir directo a modificar las promociones que esta viendo -->
+            <div class="alert alert-info d-flex justify-content-between align-items-center flex-wrap gap-2" role="alert">
+              <span><i class="bi bi-gear"></i> Estás viendo los productos <?php echo $oferta == '2x1' ? 'en 2x1' : 'con descuento'; ?>.</span>
+              <a href="../Admin/Promociones/listado.php?tipo=<?php echo $oferta; ?>" class="btn btn-sm btn-verde">
+                Modificar <?php echo $oferta == '2x1' ? 'promociones 2x1' : 'descuentos'; ?>
+              </a>
+            </div>
+          <?php } ?>
 
           <!-- Buscador: nombre, categoría y orden por precio (sp_producto_buscar) -->
           <form action="catalogo.php" method="GET" id="formBuscar" class="row g-2 mb-4">
@@ -95,7 +109,7 @@ $oferta = $_GET['oferta'] ?? '';
 
     <?php IncludeJS(); ?>
 
-    <script src="../Assets/js/catalogo.js"></script>
+    <script src="<?php echo Asset('js/catalogo.js'); ?>"></script>
 
   </body>
 </html>

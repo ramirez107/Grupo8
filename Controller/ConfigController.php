@@ -18,6 +18,16 @@ function RutaView()
     return str_repeat('../', max($niveles, 1));
 }
 
+// ruta de un css o js de Assets con ?v=fecha del archivo
+// asi el navegador descarga la version nueva cada vez que se modifica (no usa la vieja de cache)
+function Asset($archivo)
+{
+    $ruta = __DIR__ . '/../View/Assets/' . $archivo;
+    $version = is_file($ruta) ? filemtime($ruta) : 0;
+
+    return RutaView() . 'Assets/' . $archivo . '?v=' . $version;
+}
+
 // ruta de la imagen del producto, si el archivo no existe usa la imagen por defecto
 function RutaImagen($imagen)
 {

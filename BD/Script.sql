@@ -163,14 +163,16 @@ CREATE TABLE pedidos (
     estado           VARCHAR(30)   NOT NULL DEFAULT 'Recibido',
     metodo_pago      VARCHAR(20)   NOT NULL,
     tarjeta_ultimos4 CHAR(4)       NULL,    -- solo los ultimos 4 numeros de la tarjeta
+    tarjeta_titular  VARCHAR(100)  NULL,    -- nombre del duenno de la tarjeta (nunca se guarda el numero completo ni el cvv)
+    comprobante      VARCHAR(255)  NULL,    -- archivo del comprobante de SINPE
     total            DECIMAL(10,2) NOT NULL DEFAULT 0,
     CONSTRAINT fk_pedidos_usuario FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario),
     CONSTRAINT fk_pedidos_direccion FOREIGN KEY (id_direccion)
         REFERENCES direcciones(id_direccion),
     CONSTRAINT ck_pedidos_estado CHECK (estado IN
-        ('Recibido','En preparación','En camino','Entregado','Cancelado')),
-    CONSTRAINT ck_pedidos_pago CHECK (metodo_pago IN ('Efectivo','Tarjeta')),
+        ('En espera','Recibido','En preparación','En camino','Entregado','Cancelado')),
+    CONSTRAINT ck_pedidos_pago CHECK (metodo_pago IN ('Efectivo','Tarjeta','SINPE')),
     INDEX ix_pedidos_fecha (fecha_pedido)
 ) ENGINE=InnoDB;
 
@@ -604,7 +606,8 @@ BEGIN
                 SET MESSAGE_TEXT = 'El pedido ya está cerrado y no puede cambiar de estado.';
         END IF;
         IF NOT (
-               (OLD.estado = 'Recibido'       AND NEW.estado IN ('En preparación','Cancelado'))
+               (OLD.estado = 'En espera'      AND NEW.estado IN ('Recibido','Cancelado'))
+            OR (OLD.estado = 'Recibido'       AND NEW.estado IN ('En preparación','Cancelado'))
             OR (OLD.estado = 'En preparación' AND NEW.estado IN ('En camino','Cancelado'))
             OR (OLD.estado = 'En camino'      AND NEW.estado IN ('Entregado','Cancelado'))
         ) THEN
@@ -1439,7 +1442,8 @@ END$$
 -- si algo falla no guarda nada
 CREATE PROCEDURE sp_pedido_crear(
     IN p_id_usuario INT, IN p_id_direccion INT, IN p_metodo_pago VARCHAR(20),
-    IN p_tarjeta_ultimos4 CHAR(4), IN p_fecha_entrega DATE,
+    IN p_tarjeta_ultimos4 CHAR(4), IN p_tarjeta_titular VARCHAR(100),
+    IN p_comprobante VARCHAR(255), IN p_fecha_entrega DATE,
     IN p_franja_horaria VARCHAR(50))
 BEGIN
     DECLARE v_fin INT DEFAULT 0;
@@ -1472,12 +1476,16 @@ BEGIN
                       AND id_usuario = p_id_usuario AND activo = 1) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Seleccione una dirección de entrega válida.';
     END IF;
-    IF p_metodo_pago NOT IN ('Efectivo','Tarjeta') THEN
+    IF p_metodo_pago NOT IN ('Efectivo','Tarjeta','SINPE') THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Método de pago no válido.';
     END IF;
     IF p_metodo_pago = 'Tarjeta' AND (p_tarjeta_ultimos4 IS NULL
-                                      OR p_tarjeta_ultimos4 NOT REGEXP '^[0-9]{4}$') THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Faltan los últimos 4 dígitos de la tarjeta.';
+                                      OR p_tarjeta_ultimos4 NOT REGEXP '^[0-9]{4}$'
+                                      OR COALESCE(TRIM(p_tarjeta_titular), '') = '') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Faltan los datos de la tarjeta.';
+    END IF;
+    IF p_metodo_pago = 'SINPE' AND COALESCE(p_comprobante, '') = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Adjunte el comprobante del SINPE.';
     END IF;
     IF p_fecha_entrega IS NULL OR p_fecha_entrega < CURDATE() THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La fecha de entrega no puede ser en el pasado.';
@@ -1500,9 +1508,15 @@ BEGIN
     START TRANSACTION;
     SET @jaulares_origen = 'PEDIDO', @jaulares_id_usuario = p_id_usuario;
 
-    INSERT INTO pedidos (id_usuario, id_direccion, metodo_pago, tarjeta_ultimos4)
-    VALUES (p_id_usuario, p_id_direccion, p_metodo_pago,
-            IF(p_metodo_pago = 'Tarjeta', p_tarjeta_ultimos4, NULL));
+    -- el SINPE queda en espera hasta que el admin revise el comprobante
+    INSERT INTO pedidos (id_usuario, id_direccion, estado, metodo_pago,
+                         tarjeta_ultimos4, tarjeta_titular, comprobante)
+    VALUES (p_id_usuario, p_id_direccion,
+            IF(p_metodo_pago = 'SINPE', 'En espera', 'Recibido'),
+            p_metodo_pago,
+            IF(p_metodo_pago = 'Tarjeta', p_tarjeta_ultimos4, NULL),
+            IF(p_metodo_pago = 'Tarjeta', TRIM(p_tarjeta_titular), NULL),
+            IF(p_metodo_pago = 'SINPE', p_comprobante, NULL));
     SET v_id_pedido = LAST_INSERT_ID();
 
     OPEN cur_carrito;
@@ -1551,8 +1565,8 @@ BEGIN
     COMMIT;
     SET @jaulares_origen = NULL, @jaulares_id_usuario = NULL;
 
-    SELECT p.id_pedido, p.total, p.fecha_pedido, v_lineas AS lineas,
-           u.correo, u.nombre
+    SELECT p.id_pedido, p.total, p.fecha_pedido, p.estado, p.metodo_pago,
+           v_lineas AS lineas, u.correo, u.nombre
       FROM pedidos p JOIN usuarios u ON u.id_usuario = p.id_usuario
      WHERE p.id_pedido = v_id_pedido;
 END$$
@@ -1761,6 +1775,25 @@ BEGIN
     SELECT ROW_COUNT() AS filas;
 END$$
 
+-- admin: vuelve a activar una promocion
+CREATE PROCEDURE sp_promocion_activar(IN p_id_promocion INT)
+BEGIN
+    UPDATE promociones SET activo = 1 WHERE id_promocion = p_id_promocion;
+    SELECT ROW_COUNT() AS filas;
+END$$
+
+-- admin: productos que tiene una promocion
+CREATE PROCEDURE sp_promocion_productos(IN p_id_promocion INT)
+BEGIN
+    SELECT p.id_producto, p.nombre, p.precio, p.imagen, p.activo,
+           c.nombre AS categoria
+      FROM producto_promocion pp
+      JOIN productos p  ON p.id_producto = pp.id_producto
+      JOIN categorias c ON c.id_categoria = p.id_categoria
+     WHERE pp.id_promocion = p_id_promocion
+     ORDER BY p.nombre;
+END$$
+
 -- admin: desactiva las promociones vencidas
 CREATE PROCEDURE sp_promocion_desactivar_vencidas()
 BEGIN
@@ -1842,7 +1875,7 @@ BEGIN
            COUNT(*)           AS pedidos,
            SUM(total)         AS total_ventas
       FROM pedidos
-     WHERE estado <> 'Cancelado'
+     WHERE estado NOT IN ('Cancelado','En espera')
        AND DATE(fecha_pedido) BETWEEN p_desde AND p_hasta
      GROUP BY DATE(fecha_pedido)
      ORDER BY fecha;
@@ -1859,6 +1892,65 @@ BEGIN
       JOIN productos pr ON pr.id_producto = pd.id_producto
      WHERE p.estado <> 'Cancelado'
      GROUP BY pr.id_producto, pr.nombre
+     ORDER BY unidades DESC
+     LIMIT p_limite;
+END$$
+
+-- admin: un pedido con el cliente, la entrega y el pago (incluye el comprobante de SINPE)
+CREATE PROCEDURE sp_pedido_obtener_admin(IN p_id_pedido INT)
+BEGIN
+    SELECT p.id_pedido, p.fecha_pedido, p.estado, p.metodo_pago, p.total,
+           p.tarjeta_ultimos4, p.tarjeta_titular, p.comprobante,
+           fn_nombre_completo(u.id_usuario) AS cliente, u.correo, u.telefono,
+           CONCAT(d.provincia, ', ', d.canton, ', ', d.distrito, '. ', d.detalle) AS direccion,
+           e.fecha_entrega, e.franja_horaria
+      FROM pedidos p
+      JOIN usuarios u ON u.id_usuario = p.id_usuario
+      JOIN direcciones d ON d.id_direccion = p.id_direccion
+      LEFT JOIN entregas e ON e.id_pedido = p.id_pedido
+     WHERE p.id_pedido = p_id_pedido;
+END$$
+
+-- admin: totales del rango para las tarjetas del reporte
+CREATE PROCEDURE sp_reporte_resumen_rango(IN p_desde DATE, IN p_hasta DATE)
+BEGIN
+    SELECT COUNT(*)                                   AS pedidos,
+           COALESCE(SUM(total), 0)                    AS total_ventas,
+           COALESCE(AVG(total), 0)                    AS ticket_promedio,
+           (SELECT COUNT(*) FROM pedidos
+             WHERE estado = 'En espera'
+               AND DATE(fecha_pedido) BETWEEN p_desde AND p_hasta) AS en_espera,
+           (SELECT COUNT(*) FROM pedidos
+             WHERE estado = 'Cancelado'
+               AND DATE(fecha_pedido) BETWEEN p_desde AND p_hasta) AS cancelados
+      FROM pedidos
+     WHERE estado NOT IN ('Cancelado','En espera')
+       AND DATE(fecha_pedido) BETWEEN p_desde AND p_hasta;
+END$$
+
+-- admin: ventas por metodo de pago en el rango
+CREATE PROCEDURE sp_reporte_ventas_metodo(IN p_desde DATE, IN p_hasta DATE)
+BEGIN
+    SELECT metodo_pago, COUNT(*) AS pedidos, SUM(total) AS total_ventas
+      FROM pedidos
+     WHERE estado NOT IN ('Cancelado','En espera')
+       AND DATE(fecha_pedido) BETWEEN p_desde AND p_hasta
+     GROUP BY metodo_pago
+     ORDER BY total_ventas DESC;
+END$$
+
+-- admin: productos mas vendidos en el rango
+CREATE PROCEDURE sp_reporte_mas_vendidos_rango(IN p_desde DATE, IN p_hasta DATE, IN p_limite INT)
+BEGIN
+    SELECT pr.id_producto, pr.nombre, pr.imagen,
+           SUM(pd.cantidad) AS unidades,
+           SUM(pd.subtotal) AS total_vendido
+      FROM pedido_detalle pd
+      JOIN pedidos p ON p.id_pedido = pd.id_pedido
+      JOIN productos pr ON pr.id_producto = pd.id_producto
+     WHERE p.estado NOT IN ('Cancelado','En espera')
+       AND DATE(p.fecha_pedido) BETWEEN p_desde AND p_hasta
+     GROUP BY pr.id_producto, pr.nombre, pr.imagen
      ORDER BY unidades DESC
      LIMIT p_limite;
 END$$

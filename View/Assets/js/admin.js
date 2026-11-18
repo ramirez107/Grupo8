@@ -10,6 +10,18 @@ $(function () {
         const formulario = this;
         const pregunta = $(formulario).data('pregunta');
 
+        // form.submit() no manda el boton, se agrega su name para que el controlador lo reciba
+        const boton = e.originalEvent && e.originalEvent.submitter
+            ? e.originalEvent.submitter
+            : formulario.querySelector('button[type="submit"][name]');
+        if (boton && boton.name && !formulario.querySelector('input[type="hidden"][name="' + boton.name + '"]')) {
+            const campo = document.createElement('input');
+            campo.type = 'hidden';
+            campo.name = boton.name;
+            campo.value = boton.value || '1';
+            formulario.appendChild(campo);
+        }
+
         const modalElemento = document.createElement('div');
         modalElemento.className = 'modal fade';
         modalElemento.tabIndex = -1;
@@ -99,6 +111,27 @@ $(function () {
                 required: 'Seleccione la imagen del producto',
                 extension: 'La imagen debe ser JPG o PNG'
             }
+        }
+    }));
+
+    // formulario de promocion (2x1 o descuento)
+    $('#formPromocion').validate($.extend({}, reglasComunes, {
+        rules: {
+            txtNombre: { required: true, maxlength: 100 },
+            txtDescuento: { required: true, number: true, min: 1, max: 99 },
+            txtFechaInicio: { required: true },
+            txtFechaFin: { required: true }
+        },
+        messages: {
+            txtNombre: { required: 'El nombre es obligatorio', maxlength: 'Máximo 100 caracteres' },
+            txtDescuento: {
+                required: 'El descuento es obligatorio',
+                number: 'Ingrese un número',
+                min: 'El descuento debe estar entre 1 y 99 %',
+                max: 'El descuento debe estar entre 1 y 99 %'
+            },
+            txtFechaInicio: { required: 'Seleccione la fecha de inicio' },
+            txtFechaFin: { required: 'Seleccione la fecha final' }
         }
     }));
 

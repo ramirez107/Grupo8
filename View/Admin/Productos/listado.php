@@ -1,5 +1,9 @@
 <?php
 include_once __DIR__ . '/../../layoutInterno.php';
+
+// el panel solo lo usa el administrador
+ValidarRol('Administrador');
+
 include_once __DIR__ . '/../../../Controller/InicioController.php';
 include_once __DIR__ . '/../../../Controller/ProductoController.php';
 
@@ -25,7 +29,7 @@ $productos = ConsultarProductosAdmin();
       <?php MostrarMensaje(); ?>
 
       <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle">
+        <table class="table table-hover align-middle">
           <thead>
             <tr>
               <th>Imagen</th>
@@ -86,7 +90,7 @@ $productos = ConsultarProductosAdmin();
 
     <?php IncludeJS(); ?>
 
-    <script src="../../Assets/js/admin.js"></script>
+    <script src="<?php echo Asset('js/admin.js'); ?>"></script>
 
   </body>
 </html>
